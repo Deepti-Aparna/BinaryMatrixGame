@@ -21,6 +21,7 @@ round_number = 1
 matrix = generate_matrix()
 correct_answer = calculate_answer(matrix)
 submissions = []
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
     message = ""
@@ -48,7 +49,7 @@ def home():
         if is_correct:
             winner = [s for s in submissions if s['correct']][0]['name']
             if name == winner:
-                message = f"🏆 {name} is the FIRST correct answer!"
+                message = f"🏆 {name} answered the question first!"
             else:
                 message = f"✅ Correct, but {winner} was first."
         else:
@@ -62,6 +63,7 @@ def home():
                            round_number=round_number,
                            admin=is_admin,
                            winner=winner)
+
 @app.route('/admin')
 def admin_panel():
 
@@ -78,6 +80,7 @@ def admin_panel():
         'admin.html',
         submissions=correct_answers
     )
+
 @app.route('/round_status')
 def round_status():
 
@@ -86,6 +89,7 @@ def round_status():
         "matrix": matrix,
         "message": f"🔄 Round {round_number} started!"
     }
+
 @app.route('/status')
 def status():
     correct_subs = [s for s in submissions if s['correct']]
