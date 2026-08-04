@@ -189,9 +189,11 @@ button:hover{
     </div>
 
 </div>
-<h2>Round {{ round_number }}/20</h2>
+<h2 id="round">
+Round {{ round_number }}/20
+</h2>
 <h2 id="message">{{ message }}</h2>
-<table>
+<table id="matrix">
     {% for row in matrix %}
     <tr>
         {% for cell in row %}
@@ -225,32 +227,57 @@ button:hover{
 {% endif %}
 <script>
 
-function checkWinner(){
+let currentRound = {{ round_number }};
 
-    fetch('/status')
+
+function checkRound(){
+
+    fetch('/round_status')
     .then(response => response.json())
     .then(data => {
 
-        if(data.winner){
 
-            document.getElementById("winner").innerHTML =
-                data.winner;
+        if(data.round != currentRound){
 
-            document.getElementById("message").innerHTML =
-                data.message;
+            currentRound = data.round;
+
+
+            document.getElementById("round").innerHTML =
+            "Round " + data.round + "/20";
+
+
+            let table = document.getElementById("matrix");
+
+            table.innerHTML = "";
+
+
+            data.matrix.forEach(row => {
+
+                let tr = document.createElement("tr");
+
+                row.forEach(cell => {
+
+                    let td = document.createElement("td");
+
+                    td.innerHTML = cell;
+
+                    tr.appendChild(td);
+
+                });
+
+                table.appendChild(tr);
+
+            });
+
 
         }
 
-    })
-    .catch(error => {
-        console.log("Error:", error);
     });
 
 }
 
 
-// Check every 2 seconds
-setInterval(checkWinner, 2000);
+setInterval(checkRound,2000);
 
 </script>
 </body>
