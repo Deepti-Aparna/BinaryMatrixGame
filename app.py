@@ -56,6 +56,7 @@ def home():
                            matrix=matrix,
                            message=message,
                            round_number=round_number,
+                           admin=True,
                            winner=winner)
 
 @app.route('/next')

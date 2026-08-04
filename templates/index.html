@@ -216,8 +216,10 @@ button:hover{
 <h3>🏅 First Correct Student</h3>
 <h2>{{ winner if winner else 'No correct answer yet' }}</h2>
 <hr>
+{% if admin %}
 <a href="/next">
     <button>Next Round</button>
 </a>
+{% endif %}
 </body>
 </html>
