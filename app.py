@@ -54,12 +54,44 @@ def home():
         else:
             message = "❌ Wrong answer."
 
+    is_admin = request.args.get("admin") == "true"
+
     return render_template('index.html',
                            matrix=matrix,
                            message=message,
                            round_number=round_number,
-                           admin=False,
+                           admin=is_admin,
                            winner=winner)
+@app.route('/admin')
+def admin_panel():
+
+    password = request.args.get("password")
+
+    if password != ADMIN_PASSWORD:
+        return "Access Denied ❌", 403
+
+    correct_answers = [
+        s for s in submissions if s['correct']
+    ]
+
+    return render_template(
+        'admin.html',
+        submissions=correct_answers
+    )
+@app.route('/status')
+def status():
+    correct_subs = [s for s in submissions if s['correct']]
+
+    if correct_subs:
+        return {
+            "winner": correct_subs[0]['name'],
+            "message": f"🏆 {correct_subs[0]['name']} is the FIRST correct answer!"
+        }
+
+    return {
+        "winner": "",
+        "message": ""
+    }
 
 @app.route('/next')
 def next_round():

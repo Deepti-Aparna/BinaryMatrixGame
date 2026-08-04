@@ -190,7 +190,7 @@ button:hover{
 
 </div>
 <h2>Round {{ round_number }}/20</h2>
-<h2>{{ message }}</h2>
+<h2 id="message">{{ message }}</h2>
 <table>
     {% for row in matrix %}
     <tr>
@@ -214,12 +214,44 @@ button:hover{
 <hr>
 
 <h3>🏅 First Correct Student</h3>
-<h2>{{ winner if winner else 'No correct answer yet' }}</h2>
+<h2 id="winner">
+{{ winner if winner else 'No correct answer yet' }}
+</h2>
 <hr>
 {% if admin %}
 <a href="/next?password=next">
     <button>Next Round</button>
 </a>
 {% endif %}
+<script>
+
+function checkWinner(){
+
+    fetch('/status')
+    .then(response => response.json())
+    .then(data => {
+
+        if(data.winner){
+
+            document.getElementById("winner").innerHTML =
+                data.winner;
+
+            document.getElementById("message").innerHTML =
+                data.message;
+
+        }
+
+    })
+    .catch(error => {
+        console.log("Error:", error);
+    });
+
+}
+
+
+// Check every 2 seconds
+setInterval(checkWinner, 2000);
+
+</script>
 </body>
 </html>

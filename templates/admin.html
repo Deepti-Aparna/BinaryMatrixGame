@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+</head>
+
+<body>
+
+<h1>🏆 Correct Answers</h1>
+
+{% if submissions %}
+
+<table border="1" cellpadding="10">
+
+<tr>
+    <th>Name</th>
+    <th>Answer</th>
+    <th>Time</th>
+</tr>
+
+{% for s in submissions %}
+
+<tr>
+    <td>{{s.name}}</td>
+    <td>{{s.answer}}</td>
+    <td>{{s.time}}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% else %}
+
+<h2>No correct answers yet</h2>
+
+{% endif %}
+
+</body>
+</html>
