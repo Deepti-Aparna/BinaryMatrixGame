@@ -15,6 +15,8 @@ def calculate_answer(matrix):
     return f"{row_max}-{col_max}-{diag_xor}"
 
 app = Flask(__name__)
+ADMIN_PASSWORD = "next"
+
 round_number = 1
 matrix = generate_matrix()
 correct_answer = calculate_answer(matrix)
@@ -61,10 +63,11 @@ def home():
 
 @app.route('/next')
 def next_round():
-    if request.args.get("admin") != "mysecret123":
-        return "Unauthorized", 403
-
     global matrix, correct_answer, submissions, round_number
+    password = request.args.get("password")
+
+    if password != ADMIN_PASSWORD:
+        return "Access Denied ❌", 403
     if round_number >= 20:
         return render_template(
             'index.html',
