@@ -68,6 +68,7 @@ def next_round():
 
     if password != ADMIN_PASSWORD:
         return "Access Denied ❌", 403
+
     if round_number >= 20:
         return render_template(
             'index.html',
@@ -86,7 +87,8 @@ def next_round():
         matrix=matrix,
         message=f"🔄 Round {round_number} started!",
         winner=None,
-        round_number=round_number)
+        round_number=round_number,
+        admin=True)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
