@@ -58,7 +58,7 @@ def home():
                            matrix=matrix,
                            message=message,
                            round_number=round_number,
-                           admin=True,
+                           admin=False,
                            winner=winner)
 
 @app.route('/next')
@@ -75,7 +75,8 @@ def next_round():
             matrix=matrix,
             message="🏁 Game Over! 20 rounds completed.",
             winner=None,
-            round_number=round_number
+            round_number=round_number,
+            admin=True
         )
     round_number += 1
     matrix = generate_matrix()
