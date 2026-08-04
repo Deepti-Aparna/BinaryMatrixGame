@@ -78,6 +78,14 @@ def admin_panel():
         'admin.html',
         submissions=correct_answers
     )
+@app.route('/round_status')
+def round_status():
+
+    return {
+        "round": round_number,
+        "matrix": matrix,
+        "message": f"🔄 Round {round_number} started!"
+    }
 @app.route('/status')
 def status():
     correct_subs = [s for s in submissions if s['correct']]
@@ -115,13 +123,14 @@ def next_round():
     correct_answer = calculate_answer(matrix)
     submissions = []
 
-    return render_template(
-        'index.html',
-        matrix=matrix,
-        message=f"🔄 Round {round_number} started!",
-        winner=None,
-        round_number=round_number,
-        admin=True)
+    # return render_template(
+    #     'index.html',
+    #     matrix=matrix,
+    #     message=f"🔄 Round {round_number} started!",
+    #     winner=None,
+    #     round_number=round_number,
+    #     admin=True)
+    return redirect('/')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
