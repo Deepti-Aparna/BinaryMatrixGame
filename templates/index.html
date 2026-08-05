@@ -180,9 +180,10 @@ button:hover {
     {% endfor %}
 </table>
 
-<form method="POST">
-    <input type="text" name="name" placeholder="Enter your name" required><br>
-    <input type="text" name="answer" placeholder="Enter your answer (e.g. 38-41-13)" required><br>
+<form id="answerForm">
+    <input type="text" id="name" name="name" placeholder="Enter your name" required><br>
+
+<input type="text" id="answer" name="answer" placeholder="Enter your answer (e.g. 38-41-13)" required><br>
     <button type="submit">Submit</button>
 </form>
 
@@ -235,6 +236,37 @@ function checkWinner() {
 setInterval(checkRound, 2000);
 setInterval(checkWinner, 2000);
 </script>
+<script>
+// Submit answer without refreshing the page
+document.getElementById("answerForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
+    const name = document.getElementById("name").value;
+    const answer = document.getElementById("answer").value;
+
+    fetch("/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `name=${encodeURIComponent(name)}&answer=${encodeURIComponent(answer)}`
+    })
+    .then(response => response.text())
+    .then(html => {
+        // Create a temporary DOM to extract updated message/winner
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        document.getElementById("message").innerHTML =
+            doc.getElementById("message").innerHTML;
+
+        document.getElementById("winner").innerHTML =
+            doc.getElementById("winner").innerHTML;
+
+        // Clear only the answer box
+        document.getElementById("answer").value = "";
+    });
+});
+</script>
 </body>
 </html>
