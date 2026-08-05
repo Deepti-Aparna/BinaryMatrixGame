@@ -206,38 +206,9 @@ button:hover {
 <script>
 let currentRound = {{ round_number }};
 
-function checkRound() {
-    fetch('/round_status')
-        .then(response => response.json())
-        .then(data => {
-
-            // If admin started a new round, reload automatically
-            if (data.round !== currentRound) {
-                location.reload();
-            }
-        })
-        .catch(error => console.log(error));
-}
-
-function checkWinner() {
-    fetch('/status')
-        .then(response => response.json())
-        .then(data => {
-
-            if (data.winner) {
-                document.getElementById("winner").innerHTML = data.winner;
-                document.getElementById("message").innerHTML = data.message;
-            }
-        })
-        .catch(error => console.log(error));
-}
-
-// Check every 2 seconds
-setInterval(checkRound, 2000);
-setInterval(checkWinner, 2000);
-</script>
-<script>
-document.getElementById("answerForm").addEventListener("submit", function() {
+// ---------------- Submit Answer ----------------
+document.getElementById("answerForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
     const name = document.getElementById("name").value.trim();
     const answer = document.getElementById("answer").value.trim();
@@ -252,17 +223,58 @@ document.getElementById("answerForm").addEventListener("submit", function() {
     .then(response => response.json())
     .then(data => {
 
+        // Update message immediately
         document.getElementById("message").innerHTML = data.message;
 
+        // Update winner immediately
         if (data.winner) {
             document.getElementById("winner").innerHTML = data.winner;
         }
 
-        // clear only answer box
+        // Clear only answer field
         document.getElementById("answer").value = "";
     })
     .catch(err => console.log(err));
 });
+
+
+// ---------------- Auto Check New Round ----------------
+function checkRound() {
+    fetch("/round_status")
+        .then(response => response.json())
+        .then(data => {
+
+            // If admin started a new round
+            if (data.round != currentRound) {
+                currentRound = data.round;
+
+                // Reload whole page automatically
+                location.reload();
+            }
+        })
+        .catch(err => console.log(err));
+}
+
+
+// ---------------- Auto Check Winner ----------------
+function checkWinner() {
+    fetch("/status")
+        .then(response => response.json())
+        .then(data => {
+
+            // Update winner for everyone automatically
+            if (data.winner) {
+                document.getElementById("winner").innerHTML = data.winner;
+                document.getElementById("message").innerHTML = data.message;
+            }
+        })
+        .catch(err => console.log(err));
+}
+
+
+// Check every 1 second
+setInterval(checkRound, 1000);
+setInterval(checkWinner, 1000);
 </script>
 </body>
 </html>

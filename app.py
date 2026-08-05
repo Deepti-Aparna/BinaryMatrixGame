@@ -230,6 +230,12 @@ def submit_answer():
         'winner': round_winner or '',
         'message': f'❌ Wrong answer. Expected format: Rmax-Cmax-XOR'
     }
+
+@app.route('/round_status')
+def round_status():
+    return {
+        "round": round_number
+    }
 # ---------------- RUN ----------------
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
