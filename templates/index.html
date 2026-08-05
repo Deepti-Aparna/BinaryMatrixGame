@@ -202,7 +202,6 @@ button:hover {
     <button>➡️ Next Round</button>
 </a>
 {% endif %}
-
 <script>
 let currentRound = {{ round_number }};
 
@@ -211,10 +210,12 @@ function checkRound() {
         .then(response => response.json())
         .then(data => {
 
+            // If admin started a new round, reload automatically
             if (data.round !== currentRound) {
                 location.reload();
             }
-        });
+        })
+        .catch(error => console.log(error));
 }
 
 function checkWinner() {
@@ -226,9 +227,11 @@ function checkWinner() {
                 document.getElementById("winner").innerHTML = data.winner;
                 document.getElementById("message").innerHTML = data.message;
             }
-        });
+        })
+        .catch(error => console.log(error));
 }
 
+// Check every 2 seconds
 setInterval(checkRound, 2000);
 setInterval(checkWinner, 2000);
 </script>
