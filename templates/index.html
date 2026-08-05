@@ -3,167 +3,151 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Binary Matrix Challenge</title>
+
     <style>
         body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #74ebd5, #4facfe);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #2563eb 100%);
     text-align: center;
     margin: 0;
     padding: 20px;
+    color: #f8fafc;
+    min-height: 100vh;
 }
-
-h1{
-    font-size: 2rem;
+h2, h3 {
+    color: #e2e8f0;
 }
+        h1 {
+            font-size: 2rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
 
-table {
-    margin: 20px auto;
-    border-collapse: collapse;
-    width: auto;
-}
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
 
-td {
-    border: 2px solid black;
-    padding: 18px;
+        td {
+            border: 2px solid #3b82f6;
+    padding: 16px;
     font-size: 22px;
     font-weight: bold;
-    min-width: 70px;
-}
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    backdrop-filter: blur(8px);
+    min-width: 65px;
+        }
 
-input {
-    width: 300px;
-    max-width: 90%;
-    padding: 12px;
-    margin: 10px;
-    font-size: 18px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
+        input {
+            width: 300px;
+            max-width: 90%;
+            padding: 12px;
+            margin: 10px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
 
-button {
-    width: 300px;
-    max-width: 90%;
-    padding: 12px;
-    margin: 10px;
+        button {
+    width: 320px;
+    max-width: 92%;
+    padding: 14px;
+    margin: 12px;
     font-size: 18px;
     font-weight: bold;
     border: none;
-    border-radius: 8px;
-    background: #16a34a;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
     color: white;
     cursor: pointer;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+    transition: all 0.25s ease;
 }
 
-button:hover{
-    background:#15803d;
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45);
 }
 
-.rules-box{
-    background:#f8fafc;
-    border:2px solid #2563eb;
-    border-radius:12px;
-    padding:20px;
-    margin:20px auto;
-    max-width:700px;
-    text-align:left;
+        .rules-box {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 22px;
+    margin: 20px auto;
+    max-width: 750px;
+    text-align: left;
+    color: #e2e8f0;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 }
 
-/* ---------- Mobile ---------- */
+        .message {
+            color: #0f172a;
+            min-height: 32px;
+        }
 
-@media (max-width:768px){
-
-    body{
-        padding:10px;
-    }
-
-    h1{
-        font-size:30px;
-    }
-
-    h2{
-        font-size:22px;
-    }
-
-    h3{
-        font-size:20px;
-    }
-
-    .rules-box{
-        padding:15px;
-        font-size:16px;
-    }
-
-    .rules-box ul{
-        padding-left:20px;
-    }
-
-    table{
-        width:100%;
-    }
-
-    td{
-        padding:12px 6px;
-        font-size:18px;
-        min-width:55px;
-    }
-
-    input,
-    button{
-        width:95%;
-        font-size:17px;
-    }
-
+        .winner-box,
+.leaderboard {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 20px;
+    max-width: 520px;
+    margin: 22px auto;
+    color: #f8fafc;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+        .leaderboard table {
+    width: 100%;
 }
 
-/* ---------- Small Phones ---------- */
-
-@media (max-width:480px){
-
-    h1{
-        font-size:26px;
-    }
-
-    h2{
-        font-size:20px;
-    }
-
-    td{
-        font-size:16px;
-        padding:10px 4px;
-        min-width:45px;
-    }
-
-    .rules-box{
-        padding:12px;
-    }
-
-    .rules-box ul{
-        font-size:15px;
-    }
-
-    input,
-    button{
-        width:100%;
-        font-size:16px;
-    }
-
+.leaderboard th {
+    background: #2563eb;
+    color: white;
+    padding: 12px;
 }
-        </style>
+
+.leaderboard td {
+    background: rgba(255, 255, 255, 0.05);
+    color: #f8fafc;
+    font-size: 18px;
+    padding: 12px;
+}
+
+        hr {
+            border: none;
+            height: 2px;
+            background: #cbd5e1;
+            margin: 30px auto;
+            max-width: 700px;
+        }
+
+        @media (max-width: 768px) {
+            td {
+                padding: 12px 6px;
+                font-size: 18px;
+                min-width: 50px;
+            }
+
+            h1 {
+                font-size: 1.7rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
 <h1>🚀 Binary Matrix Challenge</h1>
-<div style="
-    background:#f8fafc;
-    border:2px solid #2563eb;
-    border-radius:12px;
-    padding:20px;
-    margin:20px auto;
-    max-width:700px;
-    text-align:left;
-">
 
-
+<div class="rules-box">
     <h2 style="color:#2563eb; text-align:center;">📜 Game Rules</h2>
 
     <ul style="font-size:18px; line-height:1.8;">
@@ -179,20 +163,13 @@ button:hover{
         <li>The first correct submission wins the round.</li>
     </ul>
 
-    <div style="
-        background:#e0f2fe;
-        padding:12px;
-        border-radius:8px;
-        margin-top:10px;
-    ">
-        <b>Example:</b> 38-41-13
-    </div>
 
 </div>
-<h2 id="round">
-Round {{ round_number }}/20
-</h2>
-<h2 id="message">{{ message }}</h2>
+
+<h2 id="round">Round {{ round_number }} / {{ total_rounds }}</h2>
+
+<h2 id="message" class="message">{{ message }}</h2>
+
 <table id="matrix">
     {% for row in matrix %}
     <tr>
@@ -203,82 +180,58 @@ Round {{ round_number }}/20
     {% endfor %}
 </table>
 
-
-
 <form method="POST">
     <input type="text" name="name" placeholder="Enter your name" required><br>
-    <input type="text" name="answer" placeholder="Enter your answer" required><br>
+    <input type="text" name="answer" placeholder="Enter your answer (e.g. 38-41-13)" required><br>
     <button type="submit">Submit</button>
 </form>
 
-
-
 <hr>
 
-<h3>🏅 First Correct Student</h3>
-<h2 id="winner">
-{{ winner if winner else 'No correct answer yet' }}
-</h2>
-<hr>
+<div class="winner-box">
+    <h3>🏅 First Correct Student</h3>
+    <h2 id="winner">
+        {{ winner if winner else 'No correct answer yet' }}
+    </h2>
+</div>
+
+
 {% if admin %}
+<hr>
 <a href="/next?password=next">
-    <button>Next Round</button>
+    <button>➡️ Next Round</button>
 </a>
 {% endif %}
-<script>
 
+<script>
 let currentRound = {{ round_number }};
 
-
-function checkRound(){
-
+function checkRound() {
     fetch('/round_status')
-    .then(response => response.json())
-    .then(data => {
+        .then(response => response.json())
+        .then(data => {
 
-
-        if(data.round != currentRound){
-
-            currentRound = data.round;
-
-
-            document.getElementById("round").innerHTML =
-            "Round " + data.round + "/20";
-
-
-            let table = document.getElementById("matrix");
-
-            table.innerHTML = "";
-
-
-            data.matrix.forEach(row => {
-
-                let tr = document.createElement("tr");
-
-                row.forEach(cell => {
-
-                    let td = document.createElement("td");
-
-                    td.innerHTML = cell;
-
-                    tr.appendChild(td);
-
-                });
-
-                table.appendChild(tr);
-
-            });
-
-
-        }
-
-    });
-
+            if (data.round !== currentRound) {
+                location.reload();
+            }
+        });
 }
 
+function checkWinner() {
+    fetch('/status')
+        .then(response => response.json())
+        .then(data => {
 
-setInterval(checkRound,2000);
+            if (data.winner) {
+                document.getElementById("winner").innerHTML = data.winner;
+                document.getElementById("message").innerHTML = data.message;
+            }
+        });
+}
 
+setInterval(checkRound, 2000);
+setInterval(checkWinner, 2000);
 </script>
+
 </body>
 </html>

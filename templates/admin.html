@@ -1,40 +1,150 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Leaderboard</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b, #2563eb);
+            color: white;
+            margin:0;
+            padding:20px;
+            text-align:center;
+        }
+
+        .card{
+            background: rgba(255,255,255,0.08);
+            border:1px solid rgba(255,255,255,0.15);
+            border-radius:16px;
+            padding:20px;
+            margin:20px auto;
+            max-width:700px;
+            backdrop-filter: blur(10px);
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:15px;
+        }
+
+        th, td{
+            padding:12px;
+            border-bottom:1px solid rgba(255,255,255,0.15);
+        }
+
+        th{
+            background:#2563eb;
+        }
+
+        .gold{
+            color:#facc15;
+            font-size:1.2rem;
+            font-weight:bold;
+        }
+
+        .btn{
+            display:inline-block;
+            padding:12px 20px;
+            margin:10px;
+            border-radius:10px;
+            text-decoration:none;
+            color:white;
+            font-weight:bold;
+        }
+
+        .next{
+            background:#16a34a;
+        }
+
+        .reset{
+            background:#dc2626;
+        }
+    </style>
 </head>
 
 <body>
 
-<h1>🏆 Correct Answers</h1>
+<h1>🎯 Admin Dashboard</h1>
 
-{% if submissions %}
+<div class="card">
+    <h2>Round {{ round_number }} / {{ total_rounds }}</h2>
 
-<table border="1" cellpadding="10">
+    {% if winner %}
+        <h2>🏆 Current Round Winner: {{ winner }}</h2>
+    {% else %}
+        <h2>No winner yet</h2>
+    {% endif %}
 
-<tr>
-    <th>Name</th>
-    <th>Answer</th>
-    <th>Time</th>
-</tr>
+    <a class="btn next" href="/next?password=next">➡️ Next Round</a>
+    <a class="btn reset" href="/reset?password=next">🔄 Reset Game</a>
+</div>
 
-{% for s in submissions %}
+<div class="card">
+    <h2>📊 Live Leaderboard</h2>
 
-<tr>
-    <td>{{s.name}}</td>
-    <td>{{s.answer}}</td>
-    <td>{{s.time}}</td>
-</tr>
+    <table>
+        <tr>
+            <th>Rank</th>
+            <th>Student</th>
+            <th>Score</th>
+        </tr>
 
-{% endfor %}
+        {% for name, score in leaderboard %}
+        <tr>
+            <td>
+                {% if loop.index == 1 %}
+                    🥇
+                {% elif loop.index == 2 %}
+                    🥈
+                {% elif loop.index == 3 %}
+                    🥉
+                {% else %}
+                    {{ loop.index }}
+                {% endif %}
+            </td>
+            <td>{{ name }}</td>
+            <td>{{ score }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 
-</table>
-
-{% else %}
-
-<h2>No correct answers yet</h2>
-
+{% if round_number >= total_rounds and champion %}
+<div class="card">
+    <h1>🏆 OVERALL CHAMPION 🏆</h1>
+    <div class="gold">{{ champion[0] }}</div>
+    <h3>Final Score: {{ champion[1] }} / {{ total_rounds }}</h3>
+</div>
 {% endif %}
+
+<div class="card">
+    <h2>📝 Current Round Submissions</h2>
+
+    <table>
+        <tr>
+            <th>Student</th>
+            <th>Answer</th>
+            <th>Correct</th>
+        </tr>
+
+        {% for s in submissions %}
+        <tr>
+            <td>{{ s.name }}</td>
+            <td>{{ s.answer }}</td>
+            <td>
+                {% if s.correct %}
+                    ✅
+                {% else %}
+                    ❌
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 
 </body>
 </html>
