@@ -36,41 +36,58 @@ round_winner = None
 
 
 # ---------------- HOME ----------------
-@app.route('/', methods=['GET', 'POST'])
+# @app.route('/', methods=['GET', 'POST'])
+# def home():
+#     global round_winner
+#
+#     message = ""
+#     winner = round_winner
+#
+#     if request.method == 'POST':
+#         name = request.form['name'].strip()
+#         answer = request.form['answer'].strip()
+#
+#         is_correct = answer == correct_answer
+#
+#         submissions.append({
+#             'name': name,
+#             'answer': answer,
+#             'correct': is_correct,
+#             'time': time.time()
+#         })
+#
+#         submissions.sort(key=lambda x: x['time'])
+#
+#         if is_correct:
+#             if round_winner is None:
+#                 round_winner = name
+#                 winner = name
+#
+#                 scores[name] = scores.get(name, 0) + 1
+#
+#                 message = f"🏆 {name} answered first! (+1 point)"
+#             else:
+#                 message = f"✅ Correct, but {round_winner} was first."
+#         else:
+#             message = "❌ Wrong answer."
+#
+#     is_admin = request.args.get("admin") == "true"
+#
+#     leaderboard = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+#
+#     return render_template(
+#         'index.html',
+#         matrix=matrix,
+#         message=message,
+#         round_number=round_number,
+#         total_rounds=TOTAL_ROUNDS,
+#         scores=leaderboard,
+#         admin=is_admin,
+#         winner=winner
+#     )
+
+@app.route('/')
 def home():
-    global round_winner
-
-    message = ""
-    winner = round_winner
-
-    if request.method == 'POST':
-        name = request.form['name'].strip()
-        answer = request.form['answer'].strip()
-
-        is_correct = answer == correct_answer
-
-        submissions.append({
-            'name': name,
-            'answer': answer,
-            'correct': is_correct,
-            'time': time.time()
-        })
-
-        submissions.sort(key=lambda x: x['time'])
-
-        if is_correct:
-            if round_winner is None:
-                round_winner = name
-                winner = name
-
-                scores[name] = scores.get(name, 0) + 1
-
-                message = f"🏆 {name} answered first! (+1 point)"
-            else:
-                message = f"✅ Correct, but {round_winner} was first."
-        else:
-            message = "❌ Wrong answer."
-
     is_admin = request.args.get("admin") == "true"
 
     leaderboard = sorted(scores.items(), key=lambda x: x[1], reverse=True)
@@ -78,14 +95,13 @@ def home():
     return render_template(
         'index.html',
         matrix=matrix,
-        message=message,
+        message="",
         round_number=round_number,
         total_rounds=TOTAL_ROUNDS,
         scores=leaderboard,
         admin=is_admin,
-        winner=winner
+        winner=round_winner
     )
-
 
 # ---------------- ADMIN PANEL ----------------
 @app.route('/admin')
@@ -168,12 +184,16 @@ def status():
 
 @app.route('/submit', methods=['POST'])
 def submit_answer():
-    global round_winner
+    global round_winner, scores, submissions, correct_answer
 
     name = request.form['name'].strip()
     answer = request.form['answer'].strip()
 
-    is_correct = (answer == correct_answer)
+    # Normalize both answers
+    answer = answer.replace(" ", "")
+    expected = correct_answer.replace(" ", "")
+
+    is_correct = (answer == expected)
 
     submissions.append({
         'name': name,
@@ -185,6 +205,8 @@ def submit_answer():
     submissions.sort(key=lambda x: x['time'])
 
     if is_correct:
+
+        # First correct answer of this round
         if round_winner is None:
             round_winner = name
             scores[name] = scores.get(name, 0) + 1
@@ -194,17 +216,19 @@ def submit_answer():
                 'winner': round_winner,
                 'message': f'🏆 {name} answered first! (+1 point)'
             }
-        else:
-            return {
-                'success': True,
-                'winner': round_winner,
-                'message': f'✅ Correct, but {round_winner} was first.'
-            }
 
+        # Correct but not first
+        return {
+            'success': True,
+            'winner': round_winner,
+            'message': f'✅ Correct, but {round_winner} was first.'
+        }
+
+    # Wrong answer
     return {
         'success': False,
         'winner': round_winner or '',
-        'message': '❌ Wrong answer.'
+        'message': f'❌ Wrong answer. Expected format: Rmax-Cmax-XOR'
     }
 # ---------------- RUN ----------------
 if __name__ == '__main__':
