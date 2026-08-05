@@ -166,7 +166,46 @@ def status():
         "message": ""
     }
 
+@app.route('/submit', methods=['POST'])
+def submit_answer():
+    global round_winner
 
+    name = request.form['name'].strip()
+    answer = request.form['answer'].strip()
+
+    is_correct = (answer == correct_answer)
+
+    submissions.append({
+        'name': name,
+        'answer': answer,
+        'correct': is_correct,
+        'time': time.time()
+    })
+
+    submissions.sort(key=lambda x: x['time'])
+
+    if is_correct:
+        if round_winner is None:
+            round_winner = name
+            scores[name] = scores.get(name, 0) + 1
+
+            return {
+                'success': True,
+                'winner': round_winner,
+                'message': f'🏆 {name} answered first! (+1 point)'
+            }
+        else:
+            return {
+                'success': True,
+                'winner': round_winner,
+                'message': f'✅ Correct, but {round_winner} was first.'
+            }
+
+    return {
+        'success': False,
+        'winner': round_winner or '',
+        'message': '❌ Wrong answer.'
+    }
 # ---------------- RUN ----------------
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)

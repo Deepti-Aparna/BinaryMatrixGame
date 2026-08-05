@@ -180,7 +180,7 @@ button:hover {
     {% endfor %}
 </table>
 
-<form id="answerForm">
+<form id="answerForm" onsubmit="return false;">
     <input type="text" id="name" name="name" placeholder="Enter your name" required><br>
 
 <input type="text" id="answer" name="answer" placeholder="Enter your answer (e.g. 38-41-13)" required><br>
@@ -237,35 +237,31 @@ setInterval(checkRound, 2000);
 setInterval(checkWinner, 2000);
 </script>
 <script>
-// Submit answer without refreshing the page
-document.getElementById("answerForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+document.getElementById("answerForm").addEventListener("submit", function() {
 
-    const name = document.getElementById("name").value;
-    const answer = document.getElementById("answer").value;
+    const name = document.getElementById("name").value.trim();
+    const answer = document.getElementById("answer").value.trim();
 
-    fetch("/", {
+    fetch("/submit", {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
         body: `name=${encodeURIComponent(name)}&answer=${encodeURIComponent(answer)}`
     })
-    .then(response => response.text())
-    .then(html => {
-        // Create a temporary DOM to extract updated message/winner
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
+    .then(response => response.json())
+    .then(data => {
 
-        document.getElementById("message").innerHTML =
-            doc.getElementById("message").innerHTML;
+        document.getElementById("message").innerHTML = data.message;
 
-        document.getElementById("winner").innerHTML =
-            doc.getElementById("winner").innerHTML;
+        if (data.winner) {
+            document.getElementById("winner").innerHTML = data.winner;
+        }
 
-        // Clear only the answer box
+        // clear only answer box
         document.getElementById("answer").value = "";
-    });
+    })
+    .catch(err => console.log(err));
 });
 </script>
 </body>
